@@ -5,7 +5,7 @@ import redis.clients.jedis.Pipeline;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
+// pipeline 命令
 public class PipelineCommands implements RedisCommands {
 
     private Pipeline pipeline;

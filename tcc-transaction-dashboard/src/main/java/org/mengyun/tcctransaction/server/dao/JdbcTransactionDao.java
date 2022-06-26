@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by cheng.zeng on 2016/9/2.
+ * Created by cheng.zeng on 2016/9/2. JDBC 事务 DAO 实现
  */
 @Deprecated
 public class JdbcTransactionDao implements TransactionDao {

@@ -27,7 +27,7 @@ public abstract class AbstractTransactionRepository implements TransactionReposi
         int result = 0;
 
         result = doUpdate(transaction);
-        if (result <= 0) {
+        if (result <= 0) { // 若更新失败后，抛出 OptimisticLockException 异常。有两种情况会导致更新失败：(1) 该事务已经被提交，被删除；(2) 乐观锁更新时，缓存的事务的版本号( Transaction.version )和存储器里的事务的版本号不同，更新失败
             throw new TransactionOptimisticLockException();
         }
 

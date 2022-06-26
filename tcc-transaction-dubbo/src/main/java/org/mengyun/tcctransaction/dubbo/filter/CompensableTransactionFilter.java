@@ -22,15 +22,15 @@ public class CompensableTransactionFilter implements Filter {
         try {
 
             method = invoker.getInterface().getMethod(invocation.getMethodName(), invocation.getParameterTypes());
-
+            // 方法的参数列表里有 TransactionContext 类型的参数
             if (ParameterTransactionContextEditor.hasTransactionContextParameter(invocation.getParameterTypes())) {
-                // in this case, will handler by ResourceCoordinatorAspect
+                // in this case, will handler by ResourceCoordinatorAspect 触发 ResourceCoordinatorAspect
                 return invoker.invoke(invocation);
             }
 
             EnableTcc enableTcc = method.getAnnotation(EnableTcc.class);
 
-            if (enableTcc != null) {
+            if (enableTcc != null) { // 生成切面
                 DubboInvokeProceedingJoinPoint pjp = new DubboInvokeProceedingJoinPoint(invoker, invocation, null, DubboTransactionContextEditor.class);
                 return (Result) FactoryBuilder.factoryOf(ResourceCoordinatorAspect.class).getInstance().interceptTransactionContextMethod(pjp);
             } else {

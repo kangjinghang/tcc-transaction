@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 public class ShardJedisCommands implements RedisCommands {
-
+    // 分片 jedis
     private ShardedJedis shardedJedis;
-
+    // 分片 key
     private byte[] shardKey;
 
     public ShardJedisCommands(ShardedJedis shardedJedis) {
@@ -25,7 +25,7 @@ public class ShardJedisCommands implements RedisCommands {
     @Override
     public Object eval(byte[] scripts, List<byte[]> keys, List<byte[]> args) {
         if (shardKey != null) {
-            return this.shardedJedis.getShard(shardKey).eval(scripts, keys, args);
+            return this.shardedJedis.getShard(shardKey).eval(scripts, keys, args); // 先得到 shard
         } else {
             throw new UnsupportedOperationException("no shardKey, cann't call eval");
         }
@@ -60,7 +60,7 @@ public class ShardJedisCommands implements RedisCommands {
     public List<Object> executePipelined(CommandCallback commandCallback) {
 
         ShardedJedisPipeline shardedJedisPipeline = this.shardedJedis.pipelined();
-
+        // 封装成 ShardedPipelineCommand
         commandCallback.execute(new ShardedPipelineCommand(shardedJedisPipeline));
 
         return shardedJedisPipeline.syncAndReturnAll();

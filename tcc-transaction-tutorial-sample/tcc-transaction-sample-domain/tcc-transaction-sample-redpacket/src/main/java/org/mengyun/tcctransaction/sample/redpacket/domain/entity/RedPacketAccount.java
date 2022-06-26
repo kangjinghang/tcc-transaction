@@ -5,14 +5,14 @@ import org.mengyun.tcctransaction.sample.exception.InsufficientBalanceException;
 import java.math.BigDecimal;
 
 /**
- * Created by changming.xie on 4/2/16.
+ * Created by changming.xie on 4/2/16. 红包账户余额
  */
 public class RedPacketAccount {
-
+    // 账户编号
     private long id;
-
+    // 用户编号
     private long userId;
-
+    // 余额
     private BigDecimal balanceAmount;
 
     public long getUserId() {

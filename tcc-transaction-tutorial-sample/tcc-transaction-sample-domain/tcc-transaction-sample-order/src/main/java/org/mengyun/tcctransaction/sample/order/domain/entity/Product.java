@@ -7,12 +7,12 @@ import java.math.BigDecimal;
  * Created by twinkle.zhou on 16/11/10.
  */
 public class Product implements Serializable {
-    private long productId;
-
+    private long productId; // 商品编号
+    // 商店编号
     private long shopId;
-
+    // 商品名
     private String productName;
-
+    // 单价
     private BigDecimal price;
 
     public Product() {

@@ -5,7 +5,7 @@ import redis.clients.jedis.ShardedJedisPipeline;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
+// 分片 Pipeline 实现
 public class ShardedPipelineCommand implements RedisCommands {
 
     private ShardedJedisPipeline shardedJedisPipeline;

@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
+// 分布式锁
 public class RedissonRecoveryLock implements RecoveryLock {
 
     private static final String DEFAULT_LOCK_NAME_PREFIX = "TCC_RECOVERY_LOCK";

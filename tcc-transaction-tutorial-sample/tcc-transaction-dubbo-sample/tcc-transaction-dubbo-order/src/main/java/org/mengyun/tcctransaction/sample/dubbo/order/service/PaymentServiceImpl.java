@@ -28,13 +28,13 @@ public class PaymentServiceImpl {
 
     @Autowired
     OrderRepository orderRepository;
-
+    // 配置TCC事务的Try、Confirm、Cancel方法。在tcc实现上方法上添加@Compensable注解，设置confirmMethod和cancelMethod方法，分别为tcc的confirm和cancel方法。
     @Compensable(confirmMethod = "confirmMakePayment", cancelMethod = "cancelMakePayment", asyncConfirm = false)
     public void makePayment(@UniqueIdentity String orderNo) {
         System.out.println("order try make payment called.time seq:" + DateFormatUtils.format(Calendar.getInstance(), "yyyy-MM-dd HH:mm:ss"));
 
         Order order = orderRepository.findByMerchantOrderNo(orderNo);
-
+        // 资金账户余额支付订单
         String result = capitalTradeOrderService.record(buildCapitalTradeOrderDto(order));
         String result2 = redPacketTradeOrderService.record(buildRedPacketTradeOrderDto(order));
     }
@@ -42,7 +42,7 @@ public class PaymentServiceImpl {
     public void confirmMakePayment(String orderNo) {
 
         try {
-            Thread.sleep(1000l);
+            Thread.sleep(1000L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -61,7 +61,7 @@ public class PaymentServiceImpl {
     public void cancelMakePayment(String orderNo) {
 
         try {
-            Thread.sleep(1000l);
+            Thread.sleep(1000L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

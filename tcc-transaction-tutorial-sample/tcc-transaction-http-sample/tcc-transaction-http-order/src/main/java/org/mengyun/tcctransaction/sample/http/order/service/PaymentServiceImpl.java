@@ -24,7 +24,7 @@ public class PaymentServiceImpl {
     @Autowired
     OrderRepository orderRepository;
 
-
+    // 添加@Compensable注解，设置confirmMethod和cancelMethod方法，分别为tcc的confirm和cancel方法
     @Compensable(confirmMethod = "confirmMakePayment", cancelMethod = "cancelMakePayment", asyncConfirm = true)
     @Transactional
     public void makePayment(String orderNo) {
@@ -33,8 +33,8 @@ public class PaymentServiceImpl {
 
         Order order = orderRepository.findByMerchantOrderNo(orderNo);
 
-        String result = tradeOrderServiceProxy.record(buildCapitalTradeOrderDto(order));
-        String result2 = tradeOrderServiceProxy.record(buildRedPacketTradeOrderDto(order));
+        String result = tradeOrderServiceProxy.record(buildCapitalTradeOrderDto(order)); // 资金账户余额支付订单
+        String result2 = tradeOrderServiceProxy.record(buildRedPacketTradeOrderDto(order)); // 红包账户余额支付订单
 
 //        String result = tradeOrderServiceProxy.record(null,buildCapitalTradeOrderDto(order));
 //        String result2 = tradeOrderServiceProxy.record(null,buildRedPacketTradeOrderDto(order));
@@ -43,7 +43,7 @@ public class PaymentServiceImpl {
     public void confirmMakePayment(String orderNo) {
 
         try {
-            Thread.sleep(1000l);
+            Thread.sleep(1000L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -63,7 +63,7 @@ public class PaymentServiceImpl {
 
 
         try {
-            Thread.sleep(1000l);
+            Thread.sleep(1000L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

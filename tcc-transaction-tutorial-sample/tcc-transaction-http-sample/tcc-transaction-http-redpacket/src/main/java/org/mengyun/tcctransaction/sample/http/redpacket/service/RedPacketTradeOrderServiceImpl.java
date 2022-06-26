@@ -25,14 +25,14 @@ public class RedPacketTradeOrderServiceImpl implements RedPacketTradeOrderServic
 
     @Autowired
     TradeOrderRepository tradeOrderRepository;
-
+    // 实现类的tcc方法上添加@Compensable注解，并提供confirm方法和cancel方法
     @Override
     @Compensable(confirmMethod = "confirmRecord", cancelMethod = "cancelRecord")
     @Transactional
     public String record(TransactionContext transactionContext, RedPacketTradeOrderDto tradeOrderDto) {
 
         try {
-            Thread.sleep(1000l);
+            Thread.sleep(1000L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -60,7 +60,7 @@ public class RedPacketTradeOrderServiceImpl implements RedPacketTradeOrderServic
                 transferFromAccount.transferFrom(tradeOrderDto.getAmount());
 
                 redPacketAccountRepository.save(transferFromAccount);
-            } catch (DataIntegrityViolationException e) {
+            } catch (Throwable e) {
 
             }
         }
@@ -72,7 +72,7 @@ public class RedPacketTradeOrderServiceImpl implements RedPacketTradeOrderServic
     public void confirmRecord(TransactionContext transactionContext, RedPacketTradeOrderDto tradeOrderDto) {
 
         try {
-            Thread.sleep(1000l);
+            Thread.sleep(1000L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -97,7 +97,7 @@ public class RedPacketTradeOrderServiceImpl implements RedPacketTradeOrderServic
     public void cancelRecord(TransactionContext transactionContext, RedPacketTradeOrderDto tradeOrderDto) {
 
         try {
-            Thread.sleep(1000l);
+            Thread.sleep(1000L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

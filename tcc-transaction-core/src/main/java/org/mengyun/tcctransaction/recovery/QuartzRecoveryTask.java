@@ -10,6 +10,6 @@ public class QuartzRecoveryTask implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         TransactionRecovery transactionRecovery = (TransactionRecovery) context.getMergedJobDataMap().get(RECOVERY_INSTANCE_KEY);
-        transactionRecovery.startRecover();
+        transactionRecovery.startRecover(); // 启动恢复事务逻辑
     }
 }

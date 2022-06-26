@@ -5,7 +5,7 @@ import redis.clients.jedis.JedisCluster;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
+// jedis cluster 实现
 public class JedisClusterCommands implements RedisCommands {
 
     private JedisCluster jedisCluster;

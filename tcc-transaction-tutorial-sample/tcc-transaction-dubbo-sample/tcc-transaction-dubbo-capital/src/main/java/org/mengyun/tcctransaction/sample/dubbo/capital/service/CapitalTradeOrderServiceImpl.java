@@ -10,7 +10,6 @@ import org.mengyun.tcctransaction.sample.capital.domain.repository.TradeOrderRep
 import org.mengyun.tcctransaction.sample.dubbo.capital.api.CapitalTradeOrderService;
 import org.mengyun.tcctransaction.sample.dubbo.capital.api.dto.CapitalTradeOrderDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,14 +26,14 @@ public class CapitalTradeOrderServiceImpl implements CapitalTradeOrderService {
 
     @Autowired
     TradeOrderRepository tradeOrderRepository;
-
+    //  配置TCC事务的Try、Confirm、Cancel方法。在tcc接口实现上方法上添加@Compensable注解，设置confirmMethod和cancelMethod方法，分别为tcc的confirm和cancel方法。
     @Override
     @Compensable(confirmMethod = "confirmRecord", cancelMethod = "cancelRecord", transactionContextEditor = DubboTransactionContextEditor.class)
     @Transactional
     public String record(CapitalTradeOrderDto tradeOrderDto) {
 
         try {
-            Thread.sleep(1000l);
+            Thread.sleep(1000L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -64,7 +63,7 @@ public class CapitalTradeOrderServiceImpl implements CapitalTradeOrderService {
 
                 capitalAccountRepository.save(transferFromAccount);
 
-            } catch (DataIntegrityViolationException e) {
+            } catch (Throwable e) {
                 //this exception may happen when insert trade order concurrently, if happened, ignore this insert operation.
             }
         }
@@ -75,7 +74,7 @@ public class CapitalTradeOrderServiceImpl implements CapitalTradeOrderService {
     @Transactional
     public void confirmRecord(CapitalTradeOrderDto tradeOrderDto) {
         try {
-            Thread.sleep(1000l);
+            Thread.sleep(1000L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -99,7 +98,7 @@ public class CapitalTradeOrderServiceImpl implements CapitalTradeOrderService {
     @Transactional
     public void cancelRecord(CapitalTradeOrderDto tradeOrderDto) {
         try {
-            Thread.sleep(1000l);
+            Thread.sleep(1000L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

@@ -18,7 +18,7 @@ public class MemoryStoreTransactionRepository extends AbstractKVStoreTransaction
     static final Logger log = LoggerFactory.getLogger(MemoryStoreTransactionRepository.class.getSimpleName());
 
     private Map<Xid, Transaction> db = new ConcurrentHashMap<>();
-
+    // 根据 keys 查找事务
     @Override
     List<Transaction> findTransactionsFromOneShard(Map<Xid, Transaction> shard, Set keys) {
 
@@ -56,7 +56,7 @@ public class MemoryStoreTransactionRepository extends AbstractKVStoreTransaction
         String nextCursor = ShardOffset.SCAN_INIT_CURSOR;
 
         if (iterator.hasNext() && count == maxFindCount) {
-            nextCursor = String.valueOf(iteratorIndex);
+            nextCursor = String.valueOf(iteratorIndex);  // 将 nextCursor 返回
         }
 
         page.setAttachment(nextCursor);

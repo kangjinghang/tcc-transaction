@@ -61,7 +61,7 @@ public class ReflectionUtils {
 
 
     public static Object getNullValue(Class type) {
-
+        // 处理基本类型
         if (boolean.class.equals(type)) {
             return false;
         } else if (byte.class.equals(type)) {
@@ -79,7 +79,7 @@ public class ReflectionUtils {
         } else if (char.class.equals(type)) {
             return ' ';
         }
-
+        // 处理对象
         return null;
     }
 

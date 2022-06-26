@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by changming.xie on 2/24/16.
+ * Created by changming.xie on 2/24/16. 分片模式
  * <p/>
  * As the storage of transaction need safely durable,make sure the redis server is set as AOF mode and always fsync.
  * set below directives in your redis.conf
@@ -37,7 +37,7 @@ public class ShardJedisTransactionRepository extends AbstractRedisTransactionRep
                     "try update redis version higher than 2.8.0 ");
         }
     }
-
+    // 包装成 ShardJedisCommands 返回
     @Override
     protected RedisCommands getRedisCommands(byte[] shardKey) {
         return new ShardJedisCommands(this.shardedJedisPool.getResource(), shardKey);

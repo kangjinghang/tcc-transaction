@@ -77,7 +77,7 @@ public class OrderController {
 
         return mv;
     }
-
+    // 支付订单
     @RequestMapping(value = "/placeorder", method = RequestMethod.POST)
     public RedirectView placeOrder(@RequestParam String redPacketPayAmount,
                                    @RequestParam long shopId,

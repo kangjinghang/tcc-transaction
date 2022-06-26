@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by changming.xie on 9/15/16.
  */
 public class TransactionStoreSerializer {
-
+    // 序列化成 map，value 是每个字段的值
     public static Map<byte[], byte[]> serialize(TransactionSerializer serializer, Transaction transaction) {
 
         Map<byte[], byte[]> map = new HashMap<byte[], byte[]>();

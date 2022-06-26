@@ -8,15 +8,15 @@ import java.util.Arrays;
 import java.util.UUID;
 
 /**
- * Created by changmingxie on 10/26/15.
+ * Created by changmingxie on 10/26/15. 事务编号，用于唯一标识一个事务。使用 UUID 算法生成，保证唯一性。
  */
 public class TransactionXid implements Xid, Serializable {
 
     private static final long serialVersionUID = -6817267250789142043L;
     private static byte[] CUSTOMIZED_TRANSACTION_ID = "UniqueIdentity".getBytes();
-    private int formatId = 1;
-    private byte[] globalTransactionId;
-    private byte[] branchQualifier;
+    private int formatId = 1; // xid 格式标识符
+    private byte[] globalTransactionId; // 全局事务编号
+    private byte[] branchQualifier; // 分支事务编号
 
     public TransactionXid() {
         globalTransactionId = uuidToByteArray(UUID.randomUUID());
@@ -40,7 +40,7 @@ public class TransactionXid implements Xid, Serializable {
 
     public TransactionXid(byte[] globalTransactionId) {
         this.globalTransactionId = globalTransactionId;
-        this.branchQualifier = uuidToByteArray(UUID.randomUUID());
+        this.branchQualifier = uuidToByteArray(UUID.randomUUID()); // 生成 分支事务编号
     }
 
     public TransactionXid(byte[] globalTransactionId, byte[] branchQualifier) {
@@ -66,7 +66,7 @@ public class TransactionXid implements Xid, Serializable {
     public int getFormatId() {
         return formatId;
     }
-
+    // 关联上其所属的事务。当参与者进行远程调用时，远程的分支事务的事务编号等于该参与者的事务编号。通过事务编号的关联，TCC Confirm / Cancel 阶段，使用参与者的事务编号和远程的分支事务进行关联，从而实现事务的提交和回滚
     @Override
     public byte[] getGlobalTransactionId() {
         return globalTransactionId;

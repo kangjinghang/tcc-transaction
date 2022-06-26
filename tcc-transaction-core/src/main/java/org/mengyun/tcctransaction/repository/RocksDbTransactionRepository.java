@@ -142,7 +142,7 @@ public class RocksDbTransactionRepository extends AbstractKVStoreTransactionRepo
             }
 
             int count = 0;
-
+            // 循环
             while (iterator.isValid() && count < maxFindCount) {
 
                 page.getData().add(iterator.key());
@@ -153,7 +153,7 @@ public class RocksDbTransactionRepository extends AbstractKVStoreTransactionRepo
 
             String nextCursor = ShardOffset.SCAN_INIT_CURSOR;
             if (iterator.isValid() && count == maxFindCount) {
-                nextCursor = new String(iterator.key());
+                nextCursor = new String(iterator.key()); // 将 nextCursor 返回
             }
 
             page.setAttachment(nextCursor);
@@ -161,7 +161,7 @@ public class RocksDbTransactionRepository extends AbstractKVStoreTransactionRepo
         return page;
     }
 
-
+    // 根据 keys 查找事务
     @Override
     List<Transaction> findTransactionsFromOneShard(RocksDB shard, Set keys) {
         List<Transaction> list = null;

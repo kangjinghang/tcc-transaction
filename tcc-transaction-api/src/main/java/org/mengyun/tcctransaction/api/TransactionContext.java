@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by changmingxie on 10/30/15.
+ * Created by changmingxie on 10/30/15. 事务上下文，保存根事务id、事务id、事务状态和参与者状态
  */
 public class TransactionContext implements Serializable {
 

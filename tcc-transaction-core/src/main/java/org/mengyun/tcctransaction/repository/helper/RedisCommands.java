@@ -3,7 +3,7 @@ package org.mengyun.tcctransaction.repository.helper;
 import java.io.Closeable;
 import java.util.List;
 import java.util.Map;
-
+// redis 命令接口
 public interface RedisCommands extends Closeable {
 
     Object eval(byte[] scripts, List<byte[]> keys, List<byte[]> args);

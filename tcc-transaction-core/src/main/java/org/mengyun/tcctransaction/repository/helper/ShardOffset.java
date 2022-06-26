@@ -11,9 +11,9 @@ public class ShardOffset {
 
     public static String SHARD_OFFSET_FORMAT = "%d" + OFFSET_DELIMITER + "%s";
 
-
+    // 分片编号
     private int nodeIndex = 0;
-    private String cursor = SCAN_INIT_CURSOR;
+    private String cursor = SCAN_INIT_CURSOR; // 扫描编号
 
     public ShardOffset() {
 

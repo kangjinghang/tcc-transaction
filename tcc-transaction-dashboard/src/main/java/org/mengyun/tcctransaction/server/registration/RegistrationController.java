@@ -78,7 +78,7 @@ public class RegistrationController {
      *
      * @return
      */
-    @PutMapping("/reset")
+    @PutMapping("/reset") // 重置事务恢复重试次数
     public Object reset(@RequestParam String domain,
                         @RequestParam String row,
                         @RequestParam String globalTxId,

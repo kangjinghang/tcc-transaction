@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
  * Created by Lee on 2020/9/22 11:28.
  * tcc-transaction
  */
-@Slf4j
+@Slf4j // Redis 事务 DAO
 public class RedisTransactionDao implements TransactionDao {
 
     private static final String DELETE_KEY_PREIFX = "DELETE:";
     private static final int DELETE_KEY_KEEP_TIME = 3 * 24 * 3600;
-    private final JedisPool jedisPool;
+    private final JedisPool jedisPool; // redis pool
     private final String domain;
 
     public RedisTransactionDao(String domain, String host, int port, int database, String password) {

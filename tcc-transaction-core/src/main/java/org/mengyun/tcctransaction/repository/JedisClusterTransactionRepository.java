@@ -9,11 +9,11 @@ import redis.clients.jedis.exceptions.JedisException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
-
+// redis cluster 实现
 public class JedisClusterTransactionRepository extends AbstractRedisTransactionRepository {
-
+    // redis cluster
     private JedisCluster jedisCluster;
-
+    // 包装成 JedisClusterCommands 返回
     @Override
     protected RedisCommands getRedisCommands(byte[] shardKey) {
         return new JedisClusterCommands(jedisCluster);
@@ -56,21 +56,21 @@ public class JedisClusterTransactionRepository extends AbstractRedisTransactionR
         public List<Jedis> getAllShards() {
 
             if (allShards.isEmpty()) {
-
+                // 获得所有节点
                 Map<String, JedisPool> clusterNodes = jedisCluster.getClusterNodes();
-
+                // 获得所有 master 节点的 ip+port
                 Set<String> masterNodeKeys = getMasterNodeKeys(clusterNodes);
 
-                for (String masterNodeKey : masterNodeKeys) {
-
+                for (String masterNodeKey : masterNodeKeys) { // 遍历每个 master node
+                    // 得到 jedis pool
                     JedisPool jedisPool = clusterNodes.get(masterNodeKey);
 
                     if (jedisPool != null) {
-                        Jedis jedis = clusterNodes.get(masterNodeKey).getResource();
+                        Jedis jedis = clusterNodes.get(masterNodeKey).getResource(); // 得到一个连接
                         allShards.add(jedis);
                     }
                 }
-
+                // 排序
                 allShards.sort(new AbstractRedisTransactionRepository.JedisComparator());
             }
 
@@ -79,29 +79,29 @@ public class JedisClusterTransactionRepository extends AbstractRedisTransactionR
 
         private Set<String> getMasterNodeKeys(Map<String, JedisPool> clusterNodes) {
             Set<String> masterNodeKeys = new HashSet<>();
-
+            // 遍历
             for (Map.Entry<String, JedisPool> entry : clusterNodes.entrySet()) {
-
+                // 得到一个 jedis 连接
                 try (Jedis jedis = entry.getValue().getResource()) {
-
+                    // 所有槽位
                     List<Object> slots = jedis.clusterSlots();
 
-                    for (Object slotInfoObj : slots) {
-                        List<Object> slotInfo = (List<Object>) slotInfoObj;
-
+                    for (Object slotInfoObj : slots) { // 遍历每个槽位
+                        List<Object> slotInfo = (List<Object>) slotInfoObj; // 得到槽位的描述信息 slotInfo
+                        // master node 是 slotInfo 的第 3 个元素
                         if (slotInfo.size() <= MASTER_NODE_INDEX) {
                             continue;
                         }
 
-                        // hostInfos
+                        // 得到  hostInfos
                         List<Object> hostInfos = (List<Object>) slotInfo.get(MASTER_NODE_INDEX);
                         if (hostInfos.isEmpty()) {
                             continue;
                         }
 
                         // at this time, we just use master, discard slave information
-                        HostAndPort node = generateHostAndPort(hostInfos);
-                        masterNodeKeys.add(JedisClusterInfoCache.getNodeKey(node));
+                        HostAndPort node = generateHostAndPort(hostInfos); // 得到 ip + port
+                        masterNodeKeys.add(JedisClusterInfoCache.getNodeKey(node)); // 加入到集合
                     }
 
                     break;

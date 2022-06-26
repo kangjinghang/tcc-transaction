@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by changming.xie on 2/24/16.
+ * Created by changming.xie on 2/24/16. 单机 redis 实现
  * <p/>
  * As the storage of transaction need safely durable,make sure the redis server is set as AOF mode and always fsync.
  * set below directives in your redis.conf
@@ -20,7 +20,7 @@ import java.util.List;
  * appendfsync always
  */
 public class RedisTransactionRepository extends AbstractRedisTransactionRepository {
-
+    // Jedis Pool
     private JedisPool jedisPool;
 
     public JedisPool getJedisPool() {

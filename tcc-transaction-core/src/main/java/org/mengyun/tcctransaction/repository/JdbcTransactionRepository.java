@@ -16,20 +16,20 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by changmingxie on 10/30/15.
+ * Created by changmingxie on 10/30/15. JDBC 事务存储器，通过 JDBC 驱动，将 Transaction 存储到 MySQL / Oracle / PostgreSQL / SQLServer 等关系数据库
  */
 public class JdbcTransactionRepository extends AbstractTransactionRepository {
-
+    // 领域。或者也可以称为模块名，应用名，用于唯一标识一个资源。例如，Maven 模块 xxx-order，我们可以配置该属性为 ORDER。
     private String domain;
-
+    // 表后缀。默认存储表名为 TCC_TRANSACTION，配置表名后，为 TCC_TRANSACTION${tbSuffix}
     private String tbSuffix;
 
     private String rootDomain;
 
     private String rootTbSuffix;
-
+    // 数据源
     private DataSource dataSource;
-
+    // 序列化
     private TransactionSerializer serializer = new RegisterableKryoTransactionSerializer();
 
     @Override
@@ -86,7 +86,7 @@ public class JdbcTransactionRepository extends AbstractTransactionRepository {
 
         try {
             connection = this.getConnection();
-
+            // SQL
             StringBuilder builder = new StringBuilder();
             builder.append("INSERT INTO " + getTableName() +
                     "(GLOBAL_TX_ID,BRANCH_QUALIFIER,TRANSACTION_TYPE,CONTENT,STATUS,RETRIED_COUNT,CREATE_TIME,LAST_UPDATE_TIME,VERSION");
@@ -107,7 +107,7 @@ public class JdbcTransactionRepository extends AbstractTransactionRepository {
             if (StringUtils.isNotEmpty(domain)) {
                 stmt.setString(10, domain);
             }
-
+            // 执行
             return stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -125,7 +125,7 @@ public class JdbcTransactionRepository extends AbstractTransactionRepository {
 
         Date lastUpdateTime = transaction.getLastUpdateTime();
         long currentVersion = transaction.getVersion();
-
+        // 设置最后更新时间 和 最新版本号
         transaction.setLastUpdateTime(new Date());
         transaction.setVersion(transaction.getVersion() + 1);
 
@@ -152,7 +152,7 @@ public class JdbcTransactionRepository extends AbstractTransactionRepository {
             if (StringUtils.isNotEmpty(domain)) {
                 stmt.setString(8, domain);
             }
-
+            // 执行
             int result = stmt.executeUpdate();
 
             return result;
@@ -174,7 +174,7 @@ public class JdbcTransactionRepository extends AbstractTransactionRepository {
 
         try {
             connection = this.getConnection();
-
+            // SQL
             StringBuilder builder = new StringBuilder();
             builder.append("DELETE FROM " + getTableName() +
                     " WHERE GLOBAL_TX_ID = ? AND BRANCH_QUALIFIER = ?");
@@ -189,7 +189,7 @@ public class JdbcTransactionRepository extends AbstractTransactionRepository {
             if (StringUtils.isNotEmpty(domain)) {
                 stmt.setString(3, domain);
             }
-
+            // 执行
             return stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -222,12 +222,12 @@ public class JdbcTransactionRepository extends AbstractTransactionRepository {
 
         try {
             connection = this.getConnection();
-
+            // SQL
             StringBuilder builder = new StringBuilder();
 
             builder.append("SELECT GLOBAL_TX_ID, BRANCH_QUALIFIER, CONTENT,STATUS,TRANSACTION_TYPE,CREATE_TIME,LAST_UPDATE_TIME,RETRIED_COUNT,VERSION");
             builder.append(StringUtils.isNotEmpty(domain) ? ",DOMAIN" : "");
-            builder.append("  FROM " + getTableName() + " WHERE LAST_UPDATE_TIME < ?");
+            builder.append("  FROM " + getTableName() + " WHERE LAST_UPDATE_TIME < ?");  // 最后更新时间
             builder.append(StringUtils.isNotEmpty(domain) ? " AND DOMAIN = ?" : "");
             builder.append(" ORDER BY TRANSACTION_ID ASC");
             builder.append(String.format(" LIMIT %s, %d", currentOffset, pageSize));
@@ -239,9 +239,9 @@ public class JdbcTransactionRepository extends AbstractTransactionRepository {
             if (StringUtils.isNotEmpty(domain)) {
                 stmt.setString(2, domain);
             }
-
+            // 执行
             ResultSet resultSet = stmt.executeQuery();
-
+            // 创建 Transaction
             this.constructTransactions(resultSet, transactions);
         } catch (Throwable e) {
             throw new TransactionIOException(e);
@@ -276,7 +276,7 @@ public class JdbcTransactionRepository extends AbstractTransactionRepository {
 
         try {
             connection = this.getConnection();
-
+            // SQL
             StringBuilder builder = new StringBuilder();
             builder.append("SELECT GLOBAL_TX_ID, BRANCH_QUALIFIER, CONTENT,STATUS,TRANSACTION_TYPE,CREATE_TIME,LAST_UPDATE_TIME,RETRIED_COUNT,VERSION");
             builder.append(StringUtils.isNotEmpty(domain) ? ",DOMAIN" : "");
@@ -284,7 +284,7 @@ public class JdbcTransactionRepository extends AbstractTransactionRepository {
 
             if (!CollectionUtils.isEmpty(xids)) {
                 for (Xid xid : xids) {
-                    builder.append(" ( GLOBAL_TX_ID = ? AND BRANCH_QUALIFIER = ? ) OR");
+                    builder.append(" ( GLOBAL_TX_ID = ? AND BRANCH_QUALIFIER = ? ) OR");  // 通过 or 拼接多个 GLOBAL_TX_ID + BRANCH_QUALIFIER 组合
                 }
 
                 builder.delete(builder.length() - 2, builder.length());
@@ -304,9 +304,9 @@ public class JdbcTransactionRepository extends AbstractTransactionRepository {
             if (StringUtils.isNotEmpty(domain)) {
                 stmt.setString(++i, domain);
             }
-
+            // 执行
             ResultSet resultSet = stmt.executeQuery();
-
+            // 创建 Transaction
             this.constructTransactions(resultSet, transactions);
         } catch (Throwable e) {
             throw new TransactionIOException(e);
@@ -317,7 +317,7 @@ public class JdbcTransactionRepository extends AbstractTransactionRepository {
 
         return transactions;
     }
-
+    // 创建 Transaction 集合
     private void constructTransactions(ResultSet resultSet, List<Transaction> transactions) throws SQLException {
         while (resultSet.next()) {
             byte[] transactionBytes = resultSet.getBytes(3);
@@ -329,7 +329,7 @@ public class JdbcTransactionRepository extends AbstractTransactionRepository {
             transactions.add(transaction);
         }
     }
-
+    // 获取 Connection
     private Connection getConnection() {
         try {
             return this.dataSource.getConnection();
@@ -337,7 +337,7 @@ public class JdbcTransactionRepository extends AbstractTransactionRepository {
             throw new TransactionIOException(e);
         }
     }
-
+    // 释放 Connection
     private void releaseConnection(Connection con) {
         try {
             if (con != null && !con.isClosed()) {
@@ -347,7 +347,7 @@ public class JdbcTransactionRepository extends AbstractTransactionRepository {
             throw new TransactionIOException(e);
         }
     }
-
+    // 释放 Statement
     private void closeStatement(Statement stmt) {
         try {
             if (stmt != null && !stmt.isClosed()) {

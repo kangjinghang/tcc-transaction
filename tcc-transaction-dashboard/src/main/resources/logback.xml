@@ -29,8 +29,8 @@
         <appender-ref ref="FILE"/>
     </appender>
 
-    <root level="@log.level@">
-        <appender-ref ref="@log.appender@"/>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
     </root>
 
     <logger name="org.apache.zookeeper" level="error"/>

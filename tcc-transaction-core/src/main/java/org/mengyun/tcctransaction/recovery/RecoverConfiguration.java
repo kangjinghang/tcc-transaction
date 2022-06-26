@@ -12,7 +12,7 @@ import java.util.Properties;
 import java.util.concurrent.locks.Lock;
 
 /**
- * Created by changming.xie on 11/25/17.
+ * Created by changming.xie on 11/25/17. 事务恢复配置接口
  */
 public class RecoverConfiguration implements TransactionConfigurator {
 

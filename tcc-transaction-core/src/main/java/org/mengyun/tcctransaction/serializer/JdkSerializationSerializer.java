@@ -5,7 +5,7 @@ import org.apache.commons.lang3.SerializationUtils;
 import java.io.Serializable;
 
 /**
- * Created by changming.xie on 7/22/16.
+ * Created by changming.xie on 7/22/16. JDK 序列化实现
  */
 public class JdkSerializationSerializer<T extends Serializable> implements ObjectSerializer<T> {
 

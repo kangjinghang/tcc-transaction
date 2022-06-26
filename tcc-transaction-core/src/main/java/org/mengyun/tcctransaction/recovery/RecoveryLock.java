@@ -6,7 +6,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public interface RecoveryLock extends Lock {
-
+    // 本地锁
     static RecoveryLock DEFAULT_LOCK = new RecoveryLock() {
 
         private Lock lock = new ReentrantLock();

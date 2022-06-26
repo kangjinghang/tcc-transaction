@@ -1,9 +1,9 @@
 package org.mengyun.tcctransaction.api;
 
 import java.lang.reflect.Method;
-
+// 默认事务上下文编辑器实现
 public class ParameterTransactionContextEditor implements TransactionContextEditor {
-
+    // 获得事务上下文在方法参数里的位置
     public static int getTransactionContextParamPosition(Class<?>[] parameterTypes) {
 
         int position = -1;
@@ -51,7 +51,7 @@ public class ParameterTransactionContextEditor implements TransactionContextEdit
 
         int position = getTransactionContextParamPosition(method.getParameterTypes());
         if (position >= 0) {
-            args[position] = transactionContext;
+            args[position] = transactionContext; // 设置方法参数
         } else {
             throw new RuntimeException("No TransactionContext parameter exist while set TransactionContext with ParameterTransactionContextEditor!");
         }

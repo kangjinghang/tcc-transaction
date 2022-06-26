@@ -8,27 +8,27 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by changming.xie on 3/25/16.
+ * Created by changming.xie on 3/25/16. 订单
  */
 public class Order implements Serializable {
 
     private static final long serialVersionUID = -5908730245224893590L;
-    private long id;
-
+    private long id; // 订单编号
+    // 支付( 下单 )用户编号
     private long payerUserId;
-
+    // 收款( 商店拥有者 )用户编号
     private long payeeUserId;
-
+    // 红包支付金额
     private BigDecimal redPacketPayAmount;
-
+    // 账户余额支付金额
     private BigDecimal capitalPayAmount;
-
+    // 订单状态 - DRAFT ：草稿  - CONFIRMED ：支付成功 - PAY_FAILED ：支付失败
     private String status = "DRAFT";
-
+    // 商户订单号，使用 UUID 生成
     private String merchantOrderNo;
 
     private long version = 1l;
-
+    // 订单明细数组。非存储字段
     private List<OrderLine> orderLines = new ArrayList<OrderLine>();
 
     public Order() {

@@ -1,12 +1,12 @@
 package org.mengyun.tcctransaction.common;
 
 /**
- * Created by changmingxie on 11/15/15.
+ * Created by changmingxie on 11/15/15. 事务类型
  */
 public enum TransactionType {
 
-    ROOT(1),
-    BRANCH(2);
+    ROOT(1), // 根事务
+    BRANCH(2); // 分支事务
 
     int id;
 

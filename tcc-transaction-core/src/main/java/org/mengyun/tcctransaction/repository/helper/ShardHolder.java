@@ -4,5 +4,5 @@ import java.io.Closeable;
 import java.util.List;
 
 public interface ShardHolder<T> extends Closeable {
-    List<T> getAllShards();
+    List<T> getAllShards(); // 获取所有分片
 }

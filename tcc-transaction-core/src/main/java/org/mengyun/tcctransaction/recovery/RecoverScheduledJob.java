@@ -4,10 +4,10 @@ import org.mengyun.tcctransaction.SystemException;
 import org.quartz.*;
 
 /**
- * Created by changming.xie on 6/2/16.
+ * Created by changming.xie on 6/2/16. 事务恢复定时任务，基于 Quartz 实现调度，不断执行事务恢复
  */
 public class RecoverScheduledJob {
-
+    // 事务恢复逻辑
     private TransactionRecovery transactionRecovery;
 
     private Scheduler scheduler;
@@ -30,7 +30,7 @@ public class RecoverScheduledJob {
             CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerName)
                     .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression)
                             .withMisfireHandlingInstructionDoNothing()).build();
-
+            // 启动任务调度
             scheduler.scheduleJob(jobDetail, cronTrigger);
 
             scheduler.startDelayed(delayStartSeconds);

@@ -7,7 +7,6 @@ spring:
 server:
   servlet:
     context-path: /@project.build.finalName@
-  port: @web.port@
+  port: 8888
 zookeeper:
-  digest: @zookeeper.digest@
-  connect-string: @zookeeper.address@
+  connect-string: localhost:2181

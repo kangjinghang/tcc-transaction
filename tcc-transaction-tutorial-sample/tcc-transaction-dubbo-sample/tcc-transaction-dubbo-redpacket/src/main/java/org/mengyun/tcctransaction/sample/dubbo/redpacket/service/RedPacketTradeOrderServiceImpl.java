@@ -10,7 +10,6 @@ import org.mengyun.tcctransaction.sample.redpacket.domain.entity.TradeOrder;
 import org.mengyun.tcctransaction.sample.redpacket.domain.repository.RedPacketAccountRepository;
 import org.mengyun.tcctransaction.sample.redpacket.domain.repository.TradeOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,14 +26,14 @@ public class RedPacketTradeOrderServiceImpl implements RedPacketTradeOrderServic
 
     @Autowired
     TradeOrderRepository tradeOrderRepository;
-
+    // 配置TCC事务的Try、Confirm、Cancel方法。在tcc接口实现上方法上添加@Compensable注解，设置confirmMethod和cancelMethod方法，分别为tcc的confirm和cancel方法。
     @Override
     @Compensable(confirmMethod = "confirmRecord", cancelMethod = "cancelRecord", transactionContextEditor = DubboTransactionContextEditor.class)
     @Transactional
     public String record(RedPacketTradeOrderDto tradeOrderDto) {
 
         try {
-            Thread.sleep(1000l);
+            Thread.sleep(1000L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -62,7 +61,7 @@ public class RedPacketTradeOrderServiceImpl implements RedPacketTradeOrderServic
                 transferFromAccount.transferFrom(tradeOrderDto.getAmount());
 
                 redPacketAccountRepository.save(transferFromAccount);
-            } catch (DataIntegrityViolationException e) {
+            } catch (Throwable e) {
                 //this exception may happen when insert trade order concurrently, if happened, ignore this insert operation.
             }
         }
@@ -74,7 +73,7 @@ public class RedPacketTradeOrderServiceImpl implements RedPacketTradeOrderServic
     public void confirmRecord(RedPacketTradeOrderDto tradeOrderDto) {
 
         try {
-            Thread.sleep(1000l);
+            Thread.sleep(1000L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

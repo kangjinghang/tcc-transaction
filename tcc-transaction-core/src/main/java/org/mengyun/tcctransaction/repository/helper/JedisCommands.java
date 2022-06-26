@@ -6,7 +6,7 @@ import redis.clients.jedis.Pipeline;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
+// jedis 实现
 public class JedisCommands implements RedisCommands {
 
     private Jedis jedis = null;
@@ -47,11 +47,11 @@ public class JedisCommands implements RedisCommands {
 
     @Override
     public List<Object> executePipelined(CommandCallback commandCallback) {
-
+        // 获取 Pipeline
         Pipeline pipeline = jedis.pipelined();
-
-        commandCallback.execute(new PipelineCommands(pipeline));
-
+        // 如果是 pipeline执行，需要封装成 Pipeline 命令（PipelineCommands），然后执行回调函数
+        commandCallback.execute(new PipelineCommands(pipeline)); // 实现的时候通过 PipelineCommands  执行
+        // 阻塞执行，返回
         return pipeline.syncAndReturnAll();
     }
 
